@@ -49,7 +49,7 @@ public class Exercise_4 {
 			lines = IOUtils.readLines(inputStream2);
 			for (String line: lines) {
 				String[] items = line.split("\t");
-				edges_list.add(RowFactory.create(items[0], items[1], "related"));
+				edges_list.add(RowFactory.create(items[0], items[1]));
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -73,17 +73,22 @@ public class Exercise_4 {
 
 		StructType edges_schema = new StructType(new StructField[]{
 				new StructField("src", DataTypes.StringType, true, new MetadataBuilder().build()),
-				new StructField("dst", DataTypes.StringType, true, new MetadataBuilder().build()),
-				new StructField("relationship", DataTypes.StringType, true, new MetadataBuilder().build())
+				new StructField("dst", DataTypes.StringType, true, new MetadataBuilder().build())
 		});
 
 		Dataset<Row> edges = sqlCtx.createDataFrame(edges_rdd, edges_schema);
 
 		GraphFrame gf = GraphFrame.apply(vertices,edges);
 
-		System.out.println(gf);
-		gf.edges().show();
-		gf.vertices().show();
+//		System.out.println(gf);
+//		gf.edges().show();
+//		gf.vertices().show();
+
+		GraphFrame pageRankResult = gf.pageRank().maxIter(20).resetProbability(0.1).run();
+		System.out.println("========== PageRank results =========");
+		pageRankResult.vertices()
+				.orderBy(org.apache.spark.sql.functions.col("pagerank").desc())
+				.show(10);
 	}
 
 }
