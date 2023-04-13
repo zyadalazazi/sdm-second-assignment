@@ -80,19 +80,22 @@ public class Exercise_4 {
 
 		GraphFrame gf = GraphFrame.apply(vertices,edges);
 
-//		System.out.println(gf);
-//		gf.edges().show();
-//		gf.vertices().show();
 
-		for (double x = 0.15; x>=0.01; x-=0.01){
-			GraphFrame pageRankResult = gf.pageRank().maxIter(1).resetProbability(x).run();
-			double y = 1-x;
-			System.out.println("========== PageRank results for dumbfactor of "+y+"=========");
+		GraphFrame pageRankResult = gf.pageRank().maxIter(12).resetProbability(0.15).run();
+		System.out.println("========== PageRank results =========");
 			pageRankResult.vertices()
 					.orderBy(org.apache.spark.sql.functions.col("pagerank").desc())
 					.show(10);
-			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		}
+
+// 		for (double x = 0.15; x>=0.01; x-=0.01){
+// 			GraphFrame pageRankResult = gf.pageRank().maxIter(1).resetProbability(x).run();
+// 			double y = 1-x;
+// 			System.out.println("========== PageRank results for dumbfactor of "+y+"=========");
+// 			pageRankResult.vertices()
+// 					.orderBy(org.apache.spark.sql.functions.col("pagerank").desc())
+// 					.show(10);
+// 			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+// 		}
 
 
 	}
